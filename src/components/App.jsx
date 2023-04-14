@@ -16,7 +16,6 @@ const initialContacts = [
 ];
 
 export const App = () => {
-
   // стан для контактів
   const [contacts, setContacts] = useState(
     () => JSON.parse(window.localStorage.getItem(CONTACTS)) ?? initialContacts // якщо в localStorage є контакти, то використовуємо їх, якщо ні, то використовуємо початковий масив
@@ -44,7 +43,6 @@ export const App = () => {
     ) {
       alert(`${name} is alredy in contacts`); // якщо є, то виводимо повідомлення
     } else {
-
       // якщо немає, то додаємо новий контакт
       setContacts(old => {
         const list = [...old]; // копіюємо масив контактів
@@ -55,17 +53,16 @@ export const App = () => {
           name: name,
           number: number,
         });
-        return  list ; // повертаємо новий масив контактів
+        return list; // повертаємо новий масив контактів
       });
     }
   };
 
   // функція для фільтрації контактів
   const filterFu = () => {
-
     // фільтруємо масив контактів по значенню фільтра
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase()) // перевіряємо чи є в імені контакту введене значення фільтра
+    const filteredContacts = contacts.filter(
+      contact => contact.name.toLowerCase().includes(filter.toLowerCase()) // перевіряємо чи є в імені контакту введене значення фільтра
     );
     return filteredContacts;
   };
@@ -73,16 +70,26 @@ export const App = () => {
   // функція для видалення контакту
   const delContact = id => {
     const filtred = contacts.filter(item => item.id !== id); // фільтруємо масив контактів по ідентифікатору
-    setContacts( filtred ); // змінюємо стан масиву контактів
+    setContacts(filtred); // змінюємо стан масиву контактів
   };
 
   return (
     <div className={css.conteiner}>
       <h1>Phonebook</h1>
-      <ContactForm addContact={addContact} /> {/* компонент форми додавання контакту */}
-      <h2>Contacts</h2>
-      <Filter filter={filter} onChangeInput={onChangeInput} />
-      <ContactList delContact={delContact} contacts={filterFu()} />
+      <ContactForm addContact={addContact} />{' '}
+      {/* компонент форми додавання контакту */}
+      <h2>Contacts</h2>{' '}
+
+      {/* Рендер за умовою */}
+      {contacts.length > 0 ? (
+        <>
+          <Filter filter={filter} onChangeInput={onChangeInput} />
+          <ContactList delContact={delContact} contacts={filterFu()} />
+        </>
+      ) : (
+        <p>No contacts yet.</p>
+      )}
+
     </div>
   );
 };
